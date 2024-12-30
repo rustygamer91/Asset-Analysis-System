@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-multipart
+openpyxl
+Pillow
+python-dotenv
+google-generativeai
+jinja2
+pydantic
+rich
+loguru

@@ -1,0 +1,21 @@
+# Environment
+.env
+venv/
+__pycache__/
+*.pyc
+
+# Temporary files
+temp/
+debug.log
+
+# IDE
+.vscode/
+.idea/
+
+# Sensitive data
+Jakkimulls Store/
+assets/
+*.xlsx
+*.xls
+*.png
+*.jpg 

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <h1 class="text-2xl font-bold mb-6">Asset Analysis Dashboard</h1>
+    
+    <!-- File Upload Form -->
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">Analyze New Asset</h2>
+        <form action="/analyze" method="post" enctype="multipart/form-data" class="space-y-4" id="analyzeForm">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Select File</label>
+                <input type="file" name="file" class="mt-1 block w-full p-2 border rounded-md">
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Analyze
+            </button>
+        </form>
+    </div>
+    
+    <!-- Add JavaScript to handle form submission -->
+    <script>
+    document.getElementById('analyzeForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                const result = await response.text();
+                // Replace current page content with analysis result
+                document.documentElement.innerHTML = result;
+            } else {
+                alert('Error analyzing file');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error analyzing file');
+        }
+    };
+    </script>
+    
+    <!-- Recent Analyses -->
+    <div>
+        <h2 class="text-xl font-semibold mb-4">Recent Assets</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% if asset_index %}
+                {% for file_path, metadata in asset_index.items() %}
+                <div class="border rounded-lg p-4 hover:shadow-md">
+                    <h3 class="font-medium">{{ metadata.file_path | basename }}</h3>
+                    <p class="text-sm text-gray-600">{{ metadata.category }} - {{ metadata.file_type }}</p>
+                    <a href="/view/{{ metadata.file_path }}" 
+                       class="text-blue-500 hover:underline"
+                       data-filepath="{{ metadata.file_path }}">
+                        View Analysis
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-2 text-center text-gray-500">
+                    No assets analyzed yet. Upload a file to get started.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

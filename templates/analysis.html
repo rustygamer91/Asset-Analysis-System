@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <h1 class="text-2xl font-bold mb-4">Analysis: {{ filename }}</h1>
+    
+    {% if debug %}
+    <div class="bg-gray-100 p-4 mb-4 rounded">
+        <pre class="text-sm">{{ result | tojson(indent=2) }}</pre>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Metadata -->
+        <div class="border rounded p-4">
+            <h2 class="text-xl font-semibold mb-2">File Information</h2>
+            <dl class="space-y-2">
+                <div>
+                    <dt class="font-medium">File Type</dt>
+                    <dd class="ml-4">{{ result.metadata.file_type }}</dd>
+                </div>
+                <div>
+                    <dt class="font-medium">Size</dt>
+                    <dd class="ml-4">{{ result.metadata.size }} bytes</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Analysis -->
+        <div class="border rounded p-4">
+            <h2 class="text-xl font-semibold mb-2">Content Analysis</h2>
+            
+            {% if result.analysis.type == "error" %}
+                <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                    <p class="text-red-700">{{ result.analysis.error }}</p>
+                </div>
+            {% else %}
+                <div class="space-y-4">
+                    <!-- Summary -->
+                    <div>
+                        <h3 class="font-medium">Summary</h3>
+                        <p class="text-gray-700">{{ result.analysis.analysis.summary }}</p>
+                    </div>
+
+                    <!-- Key Points -->
+                    <div>
+                        <h3 class="font-medium">Key Points</h3>
+                        <ul class="list-disc ml-4">
+                            {% for point in result.analysis.analysis.key_points %}
+                                <li class="text-gray-700">{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Insights -->
+                    <div>
+                        <h3 class="font-medium">Business Insights</h3>
+                        <ul class="list-disc ml-4">
+                            {% for insight in result.analysis.analysis.insights %}
+                                <li class="text-gray-700">{{ insight }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
